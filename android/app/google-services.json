@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "154487551354",
+    "project_id": "movies-283aa",
+    "storage_bucket": "movies-283aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154487551354:android:1cfc8c369f9a858b5bd2c3",
+        "android_client_info": {
+          "package_name": "com.example.movie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBULYFeT0kGYle8i5BP4iN5mU5whRN53ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154487551354:android:412f3fee44dbd7dc5bd2c3",
+        "android_client_info": {
+          "package_name": "com.example.netflix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBULYFeT0kGYle8i5BP4iN5mU5whRN53ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
