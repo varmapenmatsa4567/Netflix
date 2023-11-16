@@ -2,25 +2,24 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:netflix/firebase_options.dart';
 import 'package:netflix/navigator_page.dart';
+import 'package:netflix/providers/download_provider.dart';
 import 'package:netflix/providers/favourites_provider.dart';
-import 'package:netflix/screens/search_screen.dart';
-import 'package:netflix/screens/youtube_video.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await FlutterDownloader.initialize(debug: true);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter();
   await Hive.openBox<List<String>>('favourites');
   await Hive.openBox<Map<dynamic, dynamic>>('watched');
-
+  await Hive.openBox<Map<dynamic, dynamic>>('downloads');
+  Box box = Hive.box<Map>('downloads');
+  Map downloads = box.get('downloads', defaultValue: {});
+  downloads.removeWhere((key, value) => value[2] != 100);
+  box.put('downloads', downloads);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.black, // Status bar color
     statusBarIconBrightness: Brightness.light, // Status bar icons' color
@@ -28,6 +27,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => FavouritesProvider()),
+      ChangeNotifierProvider(create: (_) => DownloadProvider())
     ],
     child: App(),
   ));

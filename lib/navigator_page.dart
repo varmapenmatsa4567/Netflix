@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:netflix/screens/downloads_screen.dart';
 import 'package:netflix/screens/favourites_screen.dart';
-import 'package:netflix/screens/movies_view.dart';
+import 'package:netflix/screens/home_view.dart';
 import 'package:netflix/screens/search_screen.dart';
 
 class NavigatorPage extends StatefulWidget {
@@ -19,13 +20,13 @@ class NavigatorPage extends StatefulWidget {
 class _NavigatorPageState extends State<NavigatorPage> {
   Widget getPage() {
     if (widget.tabName == 'Home') {
-      return MoviesView();
+      return HomeView();
     } else if (widget.tabName == 'Watchlist') {
       return FavouritesScreen();
     } else if (widget.tabName == 'Search') {
       return SearchScreen();
     }
-    return Container();
+    return DownloadsScreen();
   }
 
   @override

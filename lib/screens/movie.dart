@@ -1,21 +1,17 @@
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:device_info_plus/device_info_plus.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:external_video_player_launcher/external_video_player_launcher.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:intl/intl.dart';
+import 'package:netflix/providers/download_provider.dart';
 import 'package:netflix/providers/favourites_provider.dart';
 import 'package:netflix/screens/video_screen.dart';
 import 'package:netflix/widgets/action_card.dart';
-import 'package:path_provider/path_provider.dart';
-// import 'package:movie/screens/player.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Movies extends StatefulWidget {
+class Movies extends StatefulWidget with WidgetsBindingObserver {
   DocumentSnapshot movie;
   Movies({
     required this.movie,
@@ -37,10 +33,26 @@ class _MoviesState extends State<Movies> {
     DocumentSnapshot movie = widget.movie;
     FavouritesProvider fp =
         Provider.of<FavouritesProvider>(context, listen: true);
+    DownloadProvider dp = Provider.of<DownloadProvider>(context, listen: true);
     // var date = movie['date'].toDate().year.toString();
     List<String> genres = movie['category'].cast<String>();
     // String category = genres.join(", ");
     Uri url = Uri.parse(movie['url']);
+    List<String> lang = [];
+    List<String> langs = [
+      'Telugu',
+      'Hindi',
+      'Tamil',
+      'Malayalam',
+      'Kannada',
+      'English',
+    ];
+    for (int i = 0; i < langs.length; i++) {
+      if (movie['tags'].contains(langs[i].toLowerCase())) {
+        lang.add(langs[i]);
+      }
+    }
+    String language = lang.join(", ");
     return Center(
       child: ListView(
         children: [
@@ -143,8 +155,9 @@ class _MoviesState extends State<Movies> {
                 ),
                 onPressed: () {
                   // launchUrl(url);
-                  requestDownload(
-                      url.toString(), movie.id, movie['name'] + '.mkv');
+                  // requestDownload(
+                  //     url.toString(), movie.id, movie['name'] + '.mkv');
+                  dp.addDownload(movie['name'], movie.id, url.toString());
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -339,25 +352,36 @@ class _MoviesState extends State<Movies> {
               ],
             ),
           ),
+          SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              "Languages",
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              language,
+              style: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+              ),
+            ),
+          ),
         ],
       ),
     );
-  }
-
-  Future<void> requestDownload(String _url, String folder, String _name) async {
-    final dir =
-        await getExternalStorageDirectory(); //From path_provider package
-    var _localPath = dir!.path + folder;
-    final savedDir = Directory(_localPath);
-    await savedDir.create(recursive: true).then((value) async {
-      String? _taskid = await FlutterDownloader.enqueue(
-        url: _url,
-        fileName: _name,
-        savedDir: _localPath,
-        showNotification: true,
-        openFileFromNotification: false,
-      );
-      // print(_taskid);
-    });
   }
 }

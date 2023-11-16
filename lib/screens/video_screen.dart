@@ -70,7 +70,7 @@ class _SamplePlayerState extends State<SamplePlayer> {
         flickManager: flickManager,
         flickVideoWithControls: FlickVideoWithControls(
           controls: FlickLandscapeControls(),
-          videoFit: BoxFit.cover,
+          videoFit: BoxFit.contain,
         ),
         preferredDeviceOrientation: [
           DeviceOrientation.landscapeLeft,
